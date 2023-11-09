@@ -12,9 +12,10 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('BakeryBake')
 
-def receipe(backed_goods_page, backed_goods):
+def recipe(baked_goods_page, backed_goods):
+    recipe_croisants = SHEET.worksheet(baked_goods_page)
     data = worksheet.backed_goods_page.get_all_values()
-    baked_goods = {column[0]: column[2] from column in data}
+    baked_goods = {column[0]: column[2] for column in data}
     print(backed_goods)
 
-receipe(receipe_croisants, croisants)
+recipe('recipe_croisants', 'croisants')
