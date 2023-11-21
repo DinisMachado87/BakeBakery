@@ -91,9 +91,9 @@ def show_menu():
   5. Exit
   ''')
 
-def get_user_choice():
+def get_user_choice(number_of_choices):
   try:
-    choice = int(input('Enter your choice (1-5):'))
+    choice = int(input(f'Enter your choice ({number_of_choices}):/n'))
     return choice
   except ValueError:
     print('Invalid input. Please enter a number.')
@@ -103,7 +103,7 @@ def main():
   show_menu()  # Display the menu initially
 
   while True:
-    user_choice = get_user_choice()
+    user_choice = get_user_choice('1-5')
 
     if user_choice is not None:
       if user_choice == 1:
@@ -119,7 +119,7 @@ def main():
         3. Portuguese Rice Flour Cakes
         4. Brownies''')
         
-        recipe_choice = get_user_choice()
+        recipe_choice = get_user_choice('1-4')
         if recipe_choice in range(1, 5):
           recipe_page_names = {
             1: 'recipe_croissants',
