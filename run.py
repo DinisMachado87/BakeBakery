@@ -23,9 +23,6 @@ def print_recipe(baked_goods_page):
         for key, value in baked_goods.items():
             print(f"{key}: {value}")
 
-
-print_recipe('recipe_croissants')
-
 def update_pantry_goals(recipes):
     pantry_goals_worksheet = SHEET.worksheet('pantry_goals')
     goals_data = pantry_goals_worksheet.get_all_values()
@@ -43,8 +40,8 @@ def update_pantry_goals(recipes):
     goals_with_increase = {ingredient: amount * 1.2 for ingredient, amount in goals.items()}
 
     # Update the "recipe_goals" worksheet with the new values
-    recipe_goals_worksheet.clear()
-    recipe_goals_worksheet.append_rows([list(goals_with_increase.keys()), list(goals_with_increase.values())])
+    pantry_goals_worksheet.clear()
+    pantry_goals_worksheet.append_rows([list(goals_with_increase.keys()), list(goals_with_increase.values())])
 
 # Get recipes
 croissants_recipe = get_recipe('recipe_croissants')
@@ -60,5 +57,67 @@ all_recipes = {
     'brownies': brownies_recipe
 }
 
-# Update recipe goals
-update_pantry_goals(all_recipes)
+def get_shopping_list():
+    print("Functionality for getting the shopping list goes here.")
+
+def register_shopped_groceries():
+    print("Functionality for registering shopped groceries goes here.")
+
+def update_recipe_doses():
+    print("Functionality for updating recipe doses goes here.")
+
+def show_menu():
+    print("Menu:")
+    print("1. Get Shopping List")
+    print("2. Register Shopped Groceries")
+    print("3. Update Recipe Doses")
+    print("4. Get Recipe")
+    print("5. Exit")
+
+def get_user_choice():
+    try:
+        choice = int(input("Enter your choice (1-5): "))
+        return choice
+    except ValueError:
+        print("Invalid input. Please enter a number.")
+        return None
+
+def main():
+    show_menu()  # Display the menu initially
+
+    while True:
+        user_choice = get_user_choice()
+
+        if user_choice is not None:
+            if user_choice == 1:
+                get_shopping_list()
+            elif user_choice == 2:
+                register_shopped_groceries()
+            elif user_choice == 3:
+                update_recipe_doses()
+            elif user_choice == 4:
+                print("Which recipe would you like to see?")
+                print("1. Croissants")
+                print("2. Pastel de Nata")
+                print("3. Portuguese Rice Flour Cakes")
+                print("4. Brownies")
+                
+                recipe_choice = get_user_choice()
+                if recipe_choice in range(1, 5):
+                    recipe_page_names = {
+                        1: 'recipe_croissants',
+                        2: 'recipe_pastel_de_nata',
+                        3: 'recipe_portuguese_rice_flour_cakes',
+                        4: 'recipe_brownies'
+                    }
+                    print_recipe(recipe_page_names[recipe_choice])
+                else:
+                    print("Invalid recipe choice. Please enter a number between 1 and 4.")
+            elif user_choice == 5:
+                print("Exiting the menu. Goodbye!")
+                break
+            else:
+                print("Invalid choice. Please enter a valid option (1-5).")
+
+
+main()
