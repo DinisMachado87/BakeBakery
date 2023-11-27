@@ -88,6 +88,7 @@ def register_shopped_groceries():
     print('Functionality for registering shopped groceries goes here.')
 
 def show_menu():
+    title = 'What would you like to do?'
     options = [
         'Get Shopping List', 
         'Register Shopped Groceries', 
