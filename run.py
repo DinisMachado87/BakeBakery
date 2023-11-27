@@ -94,7 +94,7 @@ def show_menu():
   print(f"You have selected {options[menu_entry_index]}!")
 
 def show_menu_get_recipe():
-title = 'Which recipe would you like to see?'
+  title = 'Which recipe would you like to see?'
   options = ['Croissants', 'Pastel de Nata', 'Portuguese Rice Flour Cakes', 'Brownies']
   terminal_menu = TerminalMenu(options)
   menu_entry_index = terminal_menu.show()
