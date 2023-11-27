@@ -1,5 +1,6 @@
 import gspread
 from google.oauth2.service_account import Credentials
+from simple_term_menu import TerminalMenu
 
 SCOPE = [
   'https://www.googleapis.com/auth/spreadsheets',
@@ -13,6 +14,7 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('BakeryBake')
 
 def get_recipe(baked_goods_page):
+  # Get the ingridients amount for the recipe defined in the variable
   worksheet = SHEET.worksheet(baked_goods_page)
   data = worksheet.get_all_values()
   baked_goods = {
@@ -21,11 +23,17 @@ def get_recipe(baked_goods_page):
   return baked_goods
 
 def print_recipe(baked_goods_page):
+  # print the recipe
   baked_goods = get_recipe(baked_goods_page)
   for key, value in baked_goods.items():
     print(f'{key}: {value}')
 
+def update_recipe_doses():
+  print('Functionality for updating recipe doses goes here.')
+
 def update_pantry_goals(recipes):
+  # actualizes pantry goals adding ingridients from all recipes 
+  # and adding 20% to each ingridient
   pantry_goals_worksheet = SHEET.worksheet('pantry_goals')
   goals_data = pantry_goals_worksheet.get_all_values()
   goals = {
@@ -79,31 +87,32 @@ def get_shopping_list():
 def register_shopped_groceries():
   print('Functionality for registering shopped groceries goes here.')
 
-def update_recipe_doses():
-  print('Functionality for updating recipe doses goes here.')
-
 def show_menu():
-  print('''Menu:
-  1. Get Shopping List
-  2. Register Shopped Groceries
-  3. Update Recipe Doses
-  4. Get Recipe
-  5. Exit
-  ''')
+  options = ['Get Shopping List', 'Register Shopped Groceries', 'Update Recipe Doses', 'Get Recipe', 'Exit']
+  terminal_menu = TerminalMenu(options)
+  menu_entry_index = terminal_menu.show()
+  print(f"You have selected {options[menu_entry_index]}!")
 
-def get_user_choice(number_of_choices):
+def show_menu_get_recipe():
+title = 'Which recipe would you like to see?'
+  options = ['Croissants', 'Pastel de Nata', 'Portuguese Rice Flour Cakes', 'Brownies']
+  terminal_menu = TerminalMenu(options)
+  menu_entry_index = terminal_menu.show()
+  print(f"You have selected {options[menu_entry_index]}!")
+
+def get_user_choice():
   try:
-    choice = int(input(f'Enter your choice ({number_of_choices}):/n'))
+    choice = int(input())
     return choice
   except ValueError:
     print('Invalid input. Please enter a number.')
     return None
 
 def main():
-  show_menu()  # Display the menu initially
+  show_menu()  # Display the initial menu
 
   while True:
-    user_choice = get_user_choice('1-5')
+    user_choice = get_user_choice()
 
     if user_choice is not None:
       if user_choice == 1:
@@ -113,14 +122,10 @@ def main():
       elif user_choice == 3:
         update_recipe_doses()
       elif user_choice == 4:
-        print('''Which recipe would you like to see?
-        1. Croissants
-        2. Pastel de Nata
-        3. Portuguese Rice Flour Cakes
-        4. Brownies''')
+        show_menu_get_recipe()
         
-        recipe_choice = get_user_choice('1-4')
-        if recipe_choice in range(1, 5):
+        recipe_choice = get_user_choice()
+        if recipe_choice in range(0, 4):
           recipe_page_names = {
             1: 'recipe_croissants',
             2: 'recipe_pastel_de_nata',
@@ -128,6 +133,8 @@ def main():
             4: 'recipe_brownies'
           }
           print_recipe(recipe_page_names[recipe_choice])
+        elif recipe_choice == 4:
+          show_menu()  # Display the initial menu
         else:
           print('''Invalid recipe choice. 
           Please enter a number between 1 and 4.''')
