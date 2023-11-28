@@ -71,7 +71,7 @@ def main():
                         3: 'recipe_portuguese_rice_flour_cakes',
                         4: 'recipe_brownies'
                     }
-                    print_recipe(recipe_page_names[recipe_choice])
+                    print_recipe(get_recipe(recipe_page_names[recipe_choice]))
                 elif recipe_choice == 4:
                     show_menu()
                 else:
@@ -86,21 +86,25 @@ def main():
 
 def get_recipe(*baked_goods_pages):
     '''Get the ingredients amount for the recipe defined in the variable'''
-    recipes = {}
+    recipes = []
     servings = {}
+    
     for page in baked_goods_pages:
         worksheet = SHEET.worksheet(page)
         data = worksheet.get_all_values()
         servings[page] = data[0][0]
-        recipes[page] = {column[0]: column[2] for column in data}
+        recipe_data = [[column[0], column[2], column[1]] for column in data]
+        recipes.append((page, recipe_data))
+    
     return recipes
 
-
-def print_recipe(baked_goods_page):
+def print_recipe(baked_goods_pages):
     '''Print the recipe'''
-    baked_goods = get_recipe(baked_goods_page)
-    for key, value in baked_goods.items():
-        print(f'{key}: {value}')
+    for page, recipe_data in baked_goods_pages:
+        print(f'{page} recipe:')
+        for column in recipe_data:
+            print(f'{column[0]}: {column[1]} {column[2]}')
+        print()
 
 def update_recipe_doses():
     show_menu_get_recipe()
@@ -117,19 +121,22 @@ def update_recipe_doses():
     
     servings_input = input("Enter the number of servings: ")
 
-    recipe_to_update = get_recipe(recipe)
-    updated_recipe = {}
-    for ingridient, amount in recipe_to_update.items():
-        updated_recipe[ingridient] = servings_input * amount / servings
-    print(updated_recipe)
+    recipes_to_update = get_recipe(recipe)
+    for page, recipe_data in recipes_to_update:
+        updated_recipe = []
+        for ingredient, amount, unit in recipe_data:
+            updated_amount = float(servings_input) * float(amount) / float(servings)
+            updated_recipe.append([ingredient, updated_amount, unit])
+        print(f'{page} updated recipe:')
+        for column in updated_recipe:
+            print(f'{column[0]}: {column[1]} {column[2]}')
+        print()
 
     try:        
-        servings = int(servings_input)
+        servings = float(servings_input)
         print(f"You entered {servings} servings.")
     except ValueError:
         print("Invalid input. Please enter a valid number of servings.")
-
-
 
 def update_pantry_goals():
     '''Actualizes pantry goals adding ingredients from all recipes 
@@ -142,17 +149,17 @@ def update_pantry_goals():
     )
     
     goals = {}
-    for recipe_name, recipe in recipes.items():
-        for ingredient, amount in recipe.items():
+    for recipe_name, recipe_data in recipes:
+        for ingredient, amount, unit in recipe_data:
             '''Check if the ingredient is already in the goals dictionary'''
             if ingredient in goals:
-                goals[ingredient] += float(amount)
+                goals[ingredient][0] += float(amount)
             else:
-                goals[ingredient] = float(amount)
+                goals[ingredient] = [float(amount), unit]
 
     '''Apply a 20% increase to all ingredient amounts'''
     goals_with_increase = {
-        ingredient: float(amount) * 1.2 for ingredient, amount in goals.items()
+        ingredient: [amount * 1.2, unit] for ingredient, (amount, unit) in goals.items()
     }
     print(goals_with_increase)
     
@@ -163,8 +170,9 @@ def update_pantry_goals():
     '''Update the "recipe_goals" worksheet with the new values'''
     pantry_goals_worksheet = SHEET.worksheet('pantry_goals')
     pantry_goals_worksheet.clear()
-    for key,value in goals_with_increase.items():
-        pantry_goals_worksheet.append_row([key, value])
+    pantry_goals_worksheet.append_row(['Ingredient', 'Amount', 'Unit'])
+    for key, (amount, unit) in goals_with_increase.items():
+        pantry_goals_worksheet.append_row([key, amount, unit])
     return goals_with_increase
 
 def get_shopping_list():
@@ -176,3 +184,4 @@ def register_shopped_groceries():
 if __name__ == '__main__':
     update_pantry_goals()
     main()
+
