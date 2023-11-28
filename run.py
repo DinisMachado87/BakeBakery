@@ -154,6 +154,7 @@ def update_pantry_goals():
     goals_with_increase = {
         ingredient: float(amount) * 1.2 for ingredient, amount in goals.items()
     }
+    print(goals_with_increase)
     
     # Transpose the data
     transposed_data = list(map(list, zip(*goals_with_increase.items())))
@@ -162,8 +163,8 @@ def update_pantry_goals():
     '''Update the "recipe_goals" worksheet with the new values'''
     pantry_goals_worksheet = SHEET.worksheet('pantry_goals')
     pantry_goals_worksheet.clear()
-    for column in goals_with_increase:
-            pantry_goals_worksheet.append_rows([column])
+    for key,value in goals_with_increase.items():
+        pantry_goals_worksheet.append_row([key, value])
     return goals_with_increase
 
 def get_shopping_list():
