@@ -2,6 +2,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 from simple_term_menu import TerminalMenu
 
+
 SCOPE = [
     'https://www.googleapis.com/auth/spreadsheets',
     'https://www.googleapis.com/auth/drive.file',
@@ -12,80 +13,6 @@ CREDS = Credentials.from_service_account_file('creds.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('BakeryBake')
-
-def get_recipe(baked_goods_page):
-    '''Get the ingredients amount for the recipe defined in the variable'''
-    worksheet = SHEET.worksheet(baked_goods_page)
-    data = worksheet.get_all_values()
-    baked_goods = {
-        column[0]: column[2] for column in data
-    }
-    return baked_goods
-
-def print_recipe(baked_goods_page):
-    '''Print the recipe'''
-    baked_goods = get_recipe(baked_goods_page)
-    for key, value in baked_goods.items():
-        print(f'{key}: {value}')
-
-def update_recipe_doses():
-    print('Functionality for updating recipe doses goes here.')
-
-def update_pantry_goals(recipes):
-    '''Actualizes pantry goals adding ingredients from all recipes 
-    and adding 20% to each ingredient'''
-    pantry_goals_worksheet = SHEET.worksheet('pantry_goals')
-    goals_data = pantry_goals_worksheet.get_all_values()
-    goals = {
-        column[0]: float(column[1]) for column in goals_data
-    }
-
-    for recipe_name, recipe in recipes.items():
-        for ingredient, amount in recipe.items():
-            '''Check if the ingredient is already in the goals dictionary'''
-            if ingredient in goals:
-                goals[ingredient] += amount
-            else:
-                goals[ingredient] = amount
-
-    '''Apply a 20% increase to all ingredient amounts'''
-    goals_with_increase = {
-        ingredient: amount * 1.2 for ingredient, amount in goals.items()
-    }
-
-    # Update the "recipe_goals" worksheet with the new values
-    pantry_goals_worksheet.clear()
-    pantry_goals_worksheet.append_rows(
-        [list(goals_with_increase.keys()), list(goals_with_increase.values())]
-    )
-
-# Get recipes
-croissants_recipe = get_recipe(
-    'recipe_croissants'
-)
-pastel_de_nata_recipe = get_recipe(
-    'recipe_pastel_de_nata'
-)
-portuguese_rice_flour_cakes_recipe = get_recipe(
-    'recipe_portuguese_rice_flour_cakes'
-)
-brownies_recipe = get_recipe(
-    'recipe_brownies'
-)
-
-# Create a dictionary to hold all recipes
-all_recipes = {
-    'croissants': croissants_recipe,
-    'pastel_de_nata': pastel_de_nata_recipe,
-    'portuguese_rice_flour_cakes': portuguese_rice_flour_cakes_recipe,
-    'brownies': brownies_recipe
-}
-
-def get_shopping_list():
-    print('Functionality for getting the shopping list goes here.')
-
-def register_shopped_groceries():
-    print('Functionality for registering shopped groceries goes here.')
 
 def show_menu():
     title = 'What would you like to do?'
@@ -101,7 +28,7 @@ def show_menu():
     print(f"You have selected {options[menu_entry_index]}!")
 
 def show_menu_get_recipe():
-    title = 'Which recipe would you like to see?'
+    title = 'Which recipe?'
     options = [
         'Croissants', 
         'Pastel de Nata', 
@@ -121,7 +48,7 @@ def get_user_choice():
         return None
 
 def main():
-        '''Display the initial menu'''
+    '''Display the initial menu'''
     show_menu() 
 
     while True:
@@ -157,6 +84,81 @@ def main():
             else:
                 print('''Invalid choice. 
                 Please enter a valid option (1-5).''')
+
+def get_recipe(*baked_goods_pages):
+    '''Get the ingredients amount for the recipe defined in the variable'''
+    recipes = {}
+    servings = {}
+    for page in baked_goods_pages:
+        worksheet = SHEET.worksheet(page)
+        data = worksheet.get_all_values()
+        servings[page] = data[0][0]
+        recipes[page] = {column[0]: column[2] for column in data}
+    print(recipes)
+
+
+def print_recipe(baked_goods_page):
+    '''Print the recipe'''
+    baked_goods = get_recipe(baked_goods_page)
+    for key, value in baked_goods.items():
+        print(f'{key}: {value}')
+
+def update_recipe_doses():
+    show_menu_get_recipe()
+    user_choice = get_user_choice()
+    if user_choice in range(0, 5):    
+        if user_choice == 1:
+            recipe = 'recipe_croissants'
+        elif user_choice == 2:
+            recipe = 'recipe_pastel_de_nata'
+        elif user_choice == 3:
+            recipe = 'recipe_portuguese_rice_flour_cakes'
+        elif user_choice == 4:
+            recipe = 'recipe_brownies'
+    
+    servings_input = input("Enter the number of servings: ")
+
+    recipe_to_update = get_recipe(recipe)
+    updated_recipe = {}
+    for ingridient, amount in recipe_to_update.items():
+        updated_recipe[ingridient] = servings_input * amount / servings
+    print(updated_recipe)
+
+    try:        
+        servings = int(servings_input)
+        print(f"You entered {servings} servings.")
+    except ValueError:
+        print("Invalid input. Please enter a valid number of servings.")
+
+
+
+def update_pantry_goals():
+    '''Actualizes pantry goals adding ingredients from all recipes 
+    and adding 20% to each ingredient'''
+    recipes = get_recipe(
+        'recipe_croissants',
+        'recipe_pastel_de_nata',
+        'recipe_portuguese_rice_flour_cakes',
+        'recipe_brownies'
+    )
+    
+    goals = {}
+    for recipe_name, recipe in recipes.items():
+        for ingredient, amount in recipe.items():
+            '''Check if the ingredient is already in the goals dictionary'''
+            if ingredient in goals:
+                goals[ingredient] += amount
+            else:
+                goals[ingredient] = amount
+    print(goals)
+    return goals
+
+
+def get_shopping_list():
+    print('Functionality for getting the shopping list goes here.')
+
+def register_shopped_groceries():
+    print('Functionality for registering shopped groceries goes here.')
 
 if __name__ == '__main__':
     main()
