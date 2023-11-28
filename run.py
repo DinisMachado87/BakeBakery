@@ -2,7 +2,6 @@ import gspread
 from google.oauth2.service_account import Credentials
 from simple_term_menu import TerminalMenu
 
-
 SCOPE = [
     'https://www.googleapis.com/auth/spreadsheets',
     'https://www.googleapis.com/auth/drive.file',
@@ -94,7 +93,7 @@ def get_recipe(*baked_goods_pages):
         data = worksheet.get_all_values()
         servings[page] = data[0][0]
         recipes[page] = {column[0]: column[2] for column in data}
-    print(recipes)
+    return recipes
 
 
 def print_recipe(baked_goods_page):
@@ -147,12 +146,25 @@ def update_pantry_goals():
         for ingredient, amount in recipe.items():
             '''Check if the ingredient is already in the goals dictionary'''
             if ingredient in goals:
-                goals[ingredient] += amount
+                goals[ingredient] += float(amount)
             else:
-                goals[ingredient] = amount
-    print(goals)
-    return goals
+                goals[ingredient] = float(amount)
 
+    '''Apply a 20% increase to all ingredient amounts'''
+    goals_with_increase = {
+        ingredient: float(amount) * 1.2 for ingredient, amount in goals.items()
+    }
+    
+    # Transpose the data
+    transposed_data = list(map(list, zip(*goals_with_increase.items())))
+    print(transposed_data)
+
+    '''Update the "recipe_goals" worksheet with the new values'''
+    pantry_goals_worksheet = SHEET.worksheet('pantry_goals')
+    pantry_goals_worksheet.clear()
+    for column in goals_with_increase:
+            pantry_goals_worksheet.append_rows([column])
+    return goals_with_increase
 
 def get_shopping_list():
     print('Functionality for getting the shopping list goes here.')
@@ -161,4 +173,5 @@ def register_shopped_groceries():
     print('Functionality for registering shopped groceries goes here.')
 
 if __name__ == '__main__':
+    update_pantry_goals()
     main()
