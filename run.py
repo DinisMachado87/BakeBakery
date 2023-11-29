@@ -15,7 +15,8 @@ SHEET = GSPREAD_CLIENT.open('BakeryBake')
 
 
 def get_recipe(*baked_goods_pages):
-    '''Get the ingredients amount for the recipe defined in the variable'''
+    '''Get the ingredients amount in a nested list 
+    and servings into a dictionary'''
     recipes = []
     servings = {}
     
@@ -28,6 +29,7 @@ def get_recipe(*baked_goods_pages):
     return recipes, servings[page]
 
 def show_menu_get_recipe():
+    '''Show the menu with the recipes and return the recipe chosen'''
     title = 'Which recipe?'
     options = {
         'croissants',
@@ -54,7 +56,21 @@ def show_menu_get_recipe():
         main()
         
 
+def update_recipe_doses():
+    print('''Update the recipe doses by multiplying the ingredients amount 
+    with the number of servings''')
+    
 
+
+def update_pantry_goals():
+    '''Actualizes pantry goals adding ingredients from all recipes 
+    and adding 20% to each ingredient'''
+    recipes = get_recipe(
+        'recipe_croissants',
+        'recipe_pastel_de_nata',
+        'recipe_portuguese_rice_flour_cakes',
+        'recipe_brownies'
+    )
     
     goals = {}
     for recipe_name, recipe_data in recipes:
@@ -84,7 +100,8 @@ def show_menu_get_recipe():
     return goals_with_increase
 
 def get_shopping_list():
-    '''Get the shopping list by subtracting pantry amounts from pantry_goals amounts'''
+    '''Get the shopping list by subtracting pantry amounts 
+    from pantry_goals amounts'''
     recipes = get_recipe('pantry_goals', 'pantry')
     
     pantry_goals_data = recipes[0][1]  # Data for pantry_goals
