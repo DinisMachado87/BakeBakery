@@ -234,10 +234,9 @@ def get_shopping_list():
                     amount_goals - amount_pantry, unit_goals
                 )
 
-    # Print the shopping list
-    print('\n Your shopping List is:')
-    for ingredient, (amount, unit) in shopping_list.items():
-        print(f'{ingredient}: {amount} {unit}')
+    # Check if the shopping list is empty
+    if not shopping_list:
+        print("Your pantry is sorted. There is nothing you need to buy!")
 
     return shopping_list
 
