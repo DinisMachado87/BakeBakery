@@ -10,6 +10,8 @@ The BakeBakery App is a Python terminal-based application designed to help users
 
 ## Features
 
+![Recipe choice screen](documentation/which_recipe.png)
+
 ### Recipe Management
 
 View recipes for various baked goods, including croissants, pastel de nata, Portuguese rice flour cakes, and brownies.
@@ -19,13 +21,19 @@ Print detailed ingredient lists for each recipe.
 
 Update pantry goals automatically when updating the intended servings of a recipe. The app automatically adds ingredients from all recipes and a 20% safety increase to each ingredient on pantry goals.
 
+![Updatedoses screen](documentation/update_servings.png)
+
 ### Recipe Doses
 
 Update recipe doses by multiplying ingredient amounts based on the number of servings entered by the user.
 
+![Get Shopping List Screen](documentation/shopping_list.png)
+
 ### Get Shopping List
 
 Get a shopping list by subtracting pantry amounts from pantry goal amounts.
+
+![Shopped Groceries screen](documentation/introduce_shopping.png)
 
 ### Shopped Groceries
 
