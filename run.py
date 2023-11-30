@@ -105,9 +105,9 @@ def update_pantry_goals():
     # Update the "recipe_goals" worksheet with the new values
     pantry_goals_worksheet = SHEET.worksheet('pantry_goals')
     pantry_goals_worksheet.clear()
-    pantry_goals_worksheet.append_row(['Ingredient', 'Amount', 'Unit'])
+    pantry_goals_worksheet.append_row(['Ingredient', 'Unit', 'Amount'])
     for ingredient, (amount, unit) in goals_with_increase.items():
-        pantry_goals_worksheet.append_row([ingredient, amount, unit])
+        pantry_goals_worksheet.append_row([ingredient, unit, amount])
 
     return goals_with_increase
 
@@ -148,10 +148,97 @@ def update_recipe_doses():
         print("Invalid input. Please enter a valid number of servings.")
 
 
+def get_shopping_list():
+    '''
+    Get the shopping list by subtracting pantry amounts 
+    from pantry_goals amounts
+    '''
+    recipes = get_recipe('pantry_goals', 'pantry')
+    pantry_goals_data = recipes[0][0][2:]  # Skip the header row
+    pantry_data = recipes[1][0][2:]       # Skip the header row
+
+    pantry_goals = {
+        row[0]: [float(row[1]), row[2]] for row in pantry_goals_data
+    }
+    pantry = {row[0]: [float(row[1]), row[2]] for row in pantry_data}
+    
+    shopping_list = {}
+    
+    for ingredient_goals, (amount_goals, unit_goals) in pantry_goals.items():
+        if ingredient_goals in pantry:
+            amount_pantry, unit_pantry = pantry[ingredient_goals]
+            if amount_pantry < amount_goals:
+                shopping_list[ingredient_goals] = (
+                    amount_goals - amount_pantry, unit_goals
+                )
+
+    print('\nShopping List:')
+    for ingredient, (amount, unit) in shopping_list.items():
+        print(f'{ingredient}: {amount} {unit}')
+
+    return shopping_list
+
 
 
 def register_shopped_groceries():
-    print('Functionality for registering shopped groceries goes here.')
+    amount_shopped = []
+    flour = input("flour (g): ")
+    # milk = input("milk (ml): ")
+    # sugar = input("sugar (g): ")
+    # salt = input("salt (g): ")
+    # butter = input("butter (g): ")
+    # yeast = input("yeast (g): ")
+    # chocolate_chips = input("chocolate chips (g): ")
+    # puff_pastry = input("puff pastry (sheets): ")
+    # egg = input("egg (units): ")
+    # cornstarch = input("cornstarch (g): ")
+    # vanilla_extract = input("vanilla extract (ml): ")
+    # cinnamon = input("cinnamon (g): ")
+    # rice_flour = input("rice flour (g): ")
+    # eggs = input("eggs (units): ")
+    # lemon = input("lemon (units): ")
+    # cocoa = input("cocoa (g): ")
+
+    amount_shopped.extend([
+        ["flour", "g", float(flour)],
+        # ["milk", "ml", float(milk)],
+        # ["sugar", "g", float(sugar)],
+        # ["salt", "g", float(salt)],
+        # ["butter", "g", float(butter)],
+        # ["yeast", "g", float(yeast)],
+        # ["chocolate chips", "g", float(chocolate_chips)],
+        # ["puff pastry", "sheets", float(puff_pastry)],
+        # ["egg", "units", float(egg)],
+        # ["cornstarch", "g", float(cornstarch)],
+        # ["vanilla extract", "ml", float(vanilla_extract)],
+        # ["cinnamon", "g", float(cinnamon)],
+        # ["rice flour", "g", float(rice_flour)],
+        # ["eggs", "units", float(eggs)],
+        # ["lemon", "units", float(lemon)],
+        # ["cocoa", "g", float(cocoa)],
+    ])
+
+    pantry = get_recipe('pantry')
+    pantry_content = pantry[0][0][2:]
+    updated_pantry = []
+
+    for row in pantry_content:
+        ingredient, amount, unit = row
+        # Find the corresponding amount_shopped value for the ingredient
+        amount_shopped_value = next(
+            (item[2] for item in amount_shopped if item[0] == ingredient), 0
+        )
+        # Add the amounts from pantry and amount_shopped
+        updated_amount = float(amount) + amount_shopped_value
+        updated_pantry.append([ingredient, unit, updated_amount])
+    
+    # Update the "pantry" worksheet with the new values
+    pantry_worksheet = SHEET.worksheet('pantry')
+    pantry_worksheet.clear()
+    pantry_worksheet.append_row(['Ingredient', 'Unit', 'Amount'])
+    for ingredient, unit, amount in updated_pantry:
+        pantry_worksheet.append_row([ingredient, unit, amount])
+
 
 
 def main():
