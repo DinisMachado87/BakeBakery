@@ -36,7 +36,7 @@ def print_ingridients():
         for ingredient in ingredients:
             print(f'{ingredient[0]}: {ingredient[1]} {ingredient[2]}')
         print('\n')
-    main()
+    main_menu()
 
 def get_recipe(*baked_goods_pages):
     '''
@@ -81,7 +81,7 @@ def show_menu_get_recipe():
         recipe = 'recipe_brownies'
         return recipe
     elif menu_entry_index == 4:
-        main()
+        main_menu()
 
 def update_pantry_goals():
     '''
@@ -304,7 +304,7 @@ def register_cooked_recipe():
 
 
 
-def main():
+def main_menu():
     '''
     Main menu function that calls the other functions
     '''
@@ -328,29 +328,42 @@ def main():
             if user_choice == 0:
                 clear_terminal()
                 get_shopping_list()
-                main()
+                main_menu()
             elif user_choice == 1:
                 clear_terminal()
                 register_shopped_groceries()
-                main()
+                main_menu()
             elif user_choice == 2:
                 clear_terminal()
                 update_recipe_doses()
                 update_pantry_goals()
-                main()
+                main_menu()
             elif user_choice == 3:
                 clear_terminal()
                 print_ingridients()
-                main()
+                main_menu()
             elif user_choice == 4:
                 clear_terminal()
                 register_cooked_recipe()
-                main()
+                main_menu()
             elif user_choice == 5:
-                clear_terminal()
-                main()
+                print('Goodbye!')
                 break
 
+def main():
+    '''Runs a welcome message and the main menu function'''
+    print('''
+    Welcome to Bakery Bake!
+    This is a tool to help you manage your bakery's pantry.
+    It will be your right hand managing recipes, 
+    pantry goals, and shopping lists for your bakery. 
+    It will help you to interact with recipes, 
+    update pantry goals based on recipes, 
+    get shopping lists, register shopped groceries, 
+    and more.
+    Just follow the menu!!!
+    ''')
+    main_menu()
 
 if __name__ == '__main__':
     main()

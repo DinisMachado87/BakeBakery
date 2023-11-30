@@ -1,32 +1,104 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+# BakeBakery App - README
 
-Welcome,
+![Responsive Mockup](documentation/am_i_responsive.png)
 
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **March 14, 2023**
+*The link to [Bakery Bake](https://bakery-bake-83c76bb3649a.herokuapp.com/)*
 
-## Reminders
+## Introduction
 
-- Your code must be placed in the `run.py` file
-- Your dependencies must be placed in the `requirements.txt` file
-- Do not edit any of the other files or your code may not deploy properly
+The BakeBakery App is a Python terminal-based application designed to help users manage recipes, pantry goals, and shopping lists for a bakery. It allows users to interact with recipes, update pantry goals based on recipes, get shopping lists, register shopped groceries, and more.
 
-## Creating the Heroku app
+## Features
 
-When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
+### Recipe Management
 
-1. `heroku/python`
-2. `heroku/nodejs`
+    View recipes for various baked goods, including croissants, pastel de nata, Portuguese rice flour cakes, and brownies.
+    Print detailed ingredient lists for each recipe.
 
-You must then create a _Config Var_ called `PORT`. Set this to `8000`
+### Pantry Goals
 
-If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
+    Update pantry goals automatically when updating the intended servings of a recipe. The app automatically adds ingredients from all recipes and a 20% safety increase to each ingredient on pantry goals.
 
-Connect your GitHub repository and deploy as normal.
+### Recipe Doses
 
-## Constraints
+    Update recipe doses by multiplying ingredient amounts based on the number of servings entered by the user.
 
-The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
+### Get Shopping List
 
----
+    Get a shopping list by subtracting pantry amounts from pantry goal amounts.
 
-Happy coding!
+### Shopped Groceries
+
+    Register shopped groceries by entering the amounts of various ingredients.
+
+### Cooked Recipe
+
+    Register cooked recipes to subtract expended ingredients from the pantry.
+
+### Clear Terminal
+
+    Automatically clears the terminal screen for a cleaner interface, when one is finished with an action.
+
+### User-Friendly Menu
+
+    The application provides a user-friendly menu with options to perform various actions.
+
+## How to Use
+
+    Click the link to [Bakery Bake](https://bakery-bake-83c76bb3649a.herokuapp.com/) or past 'https://bakery-bake-83c76bb3649a.herokuapp.com/' in your browser.
+    Navigate through the menu using arrow keys and Enter.
+    Choose actions such as getting a shopping list, updating recipe doses, registering shopped groceries, or registering cooked recipes.
+    Follow on-screen prompts to input necessary information.
+
+## Technologies
+
+### Languages:
+
+    Python 3.8.5: Used to write the whole app
+
+
+### Dependencies
+
+    Heroku: used as a terminal to deploy the app.
+    Google Sheets API library for accessing and modifying Google Sheets.
+    google-auth: Google Authentication library.
+    simple-term-menu: Library for creating terminal-based menus.
+
+### Standard library imports:
+
+[os](https://docs.python.org/3/library/os.html ) was used to clear the terminal before running the program.
+
+### Other tools:
+
+[VSCode](https://code.visualstudio.com/) was used as the main tool to write and edit code.
+[GitHub](https://github.com/) was used to host the code of the website.
+
+## Deployment
+
+### Clone the repository to your local machine:
+
+git clone https://github.com/your-username/BakeBakery.git
+
+### Install the required dependencies:
+
+    pip install gspread google-auth simple-term-menu
+
+### Set up Google Sheets API:
+
+    Follow the instructions in the gspread documentation to create and download a service account key in JSON format.
+
+    Place the downloaded JSON key file in the project directory and name it creds.json.
+
+    Create a Google Sheets document and name it 'BakeryBake'. Share it with the email address provided in the client_email field of the creds.json file.
+
+### Run the run.py script:
+
+    python run.py
+
+## Contributors
+
+    Dinis Machado
+
+## Acknowledgments
+
+    I am enormously thankful to my mentors Juliia Konn and Alex K. for their guidance and valuable feedback!

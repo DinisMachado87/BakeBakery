@@ -35,7 +35,7 @@ def get_user_choice():
         print('Invalid input. Please enter a number.')
         return None
 
-def main():
+def main_menu():
     '''Display the initial menu'''
     show_menu() 
 
