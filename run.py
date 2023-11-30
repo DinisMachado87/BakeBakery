@@ -36,7 +36,7 @@ def print_ingridients():
 
 def get_recipe(*baked_goods_pages):
     '''
-    Get the ingredients amount in a nested list 
+    Get the ingredients amount in a nested list
     and servings into a dictionary
     '''
     recipes = []
@@ -64,7 +64,7 @@ def show_menu_get_recipe():
     menu_entry_index = terminal_menu.show()
     if menu_entry_index == 0:
         recipe = 'recipe_croissants'
-        return recipe  
+        return recipe
     elif menu_entry_index == 1:
         recipe = 'recipe_pastel_de_nata'
         return recipe
@@ -80,13 +80,13 @@ def show_menu_get_recipe():
 
 def verify_input(user_input):
     """
-    Verify if the input is a non-negative 
+    Verify if the input is a non-negative
     integer or float and not an empty string.
     """
     try:
         # Check if the input is a numeric value
         input_numeric = float(user_input)
-        
+
         # Check if the input is non-negative
         if input_numeric < 0:
             raise ValueError("Please enter a non-negative number.")
@@ -105,7 +105,10 @@ def get_valid_input(prompt):
     while True:
         user_input = input(prompt).strip()
 
-        # Check if the input length is greater than 0 after stripping whitespaces
+        '''
+        Check if the input length is greater than 0
+        after stripping whitespaces
+        '''
         if len(user_input) > 0:
             verified_input = verify_input(user_input)
 
@@ -117,9 +120,10 @@ def get_valid_input(prompt):
         else:
             print("Input cannot be empty. Please try again.")
 
+
 def update_pantry_goals():
     '''
-    Actualizes pantry goals adding ingredients from all recipes 
+    Actualizes pantry goals adding ingredients from all recipes
     and adding 20% to each ingredient
     '''
     print('\n Hold on! We are updating the pantry goals...\n')
@@ -159,28 +163,30 @@ def update_pantry_goals():
 
 def update_recipe_doses():
     '''
-    Update the recipe doses by multiplying the ingredients amount 
+    Update the recipe doses by multiplying the ingredients amount
     with the number of servings
     '''
     print('''\n What recipe do you want to update?''')
     recipes = get_recipe(show_menu_get_recipe())
     clear_terminal()
     servings_input = get_valid_input(
-'''Enter the number of servings you want to resize the recipe for : '''
-    )
+        '''
+Enter the number of servings you want to resize the recipe for :
+        '''
+        )
 
     clear_terminal()
     for recipe in recipes:
         ingredients, servings, recipe_name = recipe
-        
+
         # Create a list with the updated ingredients
         updated_recipe = []
 
         # Multiply the amount of each ingredient by the number of servings
         for ingredient, amount, unit in ingredients:
             updated_amount = (
-                float(servings_input) * 
-                float(amount) / 
+                float(servings_input) *
+                float(amount) /
                 float(servings)
             )
             updated_recipe.append([ingredient, unit, updated_amount])
@@ -195,14 +201,14 @@ def update_recipe_doses():
         # Update the "recipe_goals" worksheet with the new values
         worksheet_to_update = SHEET.worksheet(recipe_name)
         worksheet_to_update.clear()
-    
+
         for ingredient, unit, updated_amount in updated_recipe:
             worksheet_to_update.append_row([ingredient, unit, updated_amount])
 
 
 def get_shopping_list():
     '''
-    Get the shopping list by subtracting pantry amounts 
+    Get the shopping list by subtracting pantry amounts
     from pantry_goals amounts
     '''
     # Get the pantry and pantry_goals data
@@ -215,10 +221,10 @@ def get_shopping_list():
         row[0]: [float(row[1]), row[2]] for row in pantry_goals_data
     }
     pantry = {row[0]: [float(row[1]), row[2]] for row in pantry_data}
-    
+
     # Create a dictionary with the shopping list
     shopping_list = {}
-    
+
     # Subtract the pantry amounts from the pantry_goals amounts
     for ingredient_goals, (amount_goals, unit_goals) in pantry_goals.items():
         if ingredient_goals in pantry:
@@ -234,7 +240,6 @@ def get_shopping_list():
         print(f'{ingredient}: {amount} {unit}')
 
     return shopping_list
-
 
 
 def register_shopped_groceries():
@@ -300,7 +305,7 @@ def register_shopped_groceries():
         # Add the amounts from pantry and amount_shopped
         updated_amount = float(amount) + amount_shopped_value
         updated_pantry.append([ingredient, unit, updated_amount])
-    
+
     # Update the "pantry" worksheet with the new values
     pantry_worksheet = SHEET.worksheet('pantry')
     pantry_worksheet.clear()
@@ -310,9 +315,10 @@ def register_shopped_groceries():
 
     print('\nYour pantry has been updated!')
 
+
 def register_cooked_recipe():
     '''
-    Subtracts from the pantry 
+    Subtracts from the pantry
     the expended ingredients in a recipe selected
     '''
 
@@ -329,7 +335,7 @@ def register_cooked_recipe():
     for pantry_row, spent_row in zip(pantry_content, ingredients_to_subtract):
         pantry_ingredient, pantry_amount, pantry_unit = pantry_row
         ingredient, amount, unit = spent_row
-    
+
         # Find the corresponding pantry value for the ingredient
         pantry_value = next(
             (item[2] for item in pantry_content if item[0] == ingredient), 0
@@ -346,16 +352,15 @@ def register_cooked_recipe():
         pantry_worksheet.append_row([ingredient, unit, amount])
 
 
-
 def main_menu():
     '''Main menu function that calls the other functions'''
     title = 'What would you like to do?'
     print(f'\n{title}\n')
     options = [
-        'Get Shopping List', 
-        'Register Shopped Groceries', 
-        'Update Recipe Doses', 
-        'Get Recipe', 
+        'Get Shopping List',
+        'Register Shopped Groceries',
+        'Update Recipe Doses',
+        'Get Recipe',
         'register cooked recipe expended goods',
         'Exit'
     ]
@@ -391,21 +396,23 @@ def main_menu():
                 print('Goodbye!')
                 break
 
+
 def main():
     '''Runs a welcome message and the main menu function'''
     print('''
     Welcome to Bakery Bake!
     This is a tool to help you manage your bakery's pantry.
-    It will be your right hand managing recipes, 
-    pantry goals, and shopping lists for your bakery. 
-    It will help you to interact with recipes, 
-    update pantry goals based on recipes, 
-    get shopping lists, register shopped groceries, 
+    It will be your right hand managing recipes,
+    pantry goals, and shopping lists for your bakery.
+    It will help you to interact with recipes,
+    update pantry goals based on recipes,
+    get shopping lists, register shopped groceries,
     and more.
-    Just navigate the menu with the arrows, type, 
+    Just navigate the menu with the arrows, type,
     and click enter for choices!!!
     ''')
     main_menu()
+
 
 if __name__ == '__main__':
     main()

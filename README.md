@@ -71,29 +71,47 @@ simple-term-menu: Library for creating terminal-based menus.
 ### Other tools:
 
 [VSCode](https://code.visualstudio.com/) was used as the main tool to write and edit code.
+
 [GitHub](https://github.com/) was used to host the code of the website.
+
+## Resolved bugs
+
+Through testing, we realized we needed to create a validation function to make sure the data introduced by the user is a non-negative numeric value, whether it's an integer or a float. This function, named verify_input, not only checks for the correctness of the input type but also ensures that the input is not an empty string, rejecting negative numbers. The get_valid_input function encapsulates the user input process, prompting the user until a valid input is provided, thus enhancing the robustness and reliability of our data processing.
 
 ## Deployment
 
 ### Clone the repository to your local machine:
 
-`git clone https://github.com/your-username/BakeBakery.git`
+git clone https://github.com/your-username/BakeBakery.git
 
-### Install the required dependencies:
+### Install the required dependencies: 
 
 pip install gspread google-auth simple-term-menu
 
 ### Set up Google Sheets API:
 
-Follow the instructions in the gspread documentation to create and download a service account key in JSON format.
+* Follow the instructions in the gspread documentation to create and download a service account key in JSON format.
+* Place the downloaded JSON key file in the project directory and name it creds.json.
+* Create a Google Sheets document and name it 'BakeryBake'. Share it with the email address provided in the client_email field of the creds.json file.
 
-Place the downloaded JSON key file in the project directory and name it creds.json.
+### Configure Heroku GitHub Integration:
 
-Create a Google Sheets document and name it 'BakeryBake'. Share it with the email address provided in the client_email field of the creds.json file.
+* Navigate to the Deploy tab of your Heroku app in the Heroku Dashboard.
+* Enable GitHub integration by authenticating with GitHub.
+* Ensure that your GitHub repository has admin access, as this is required for configuring automatic GitHub deploys.
+* Link your Heroku app to a GitHub repo in the Deploy tab.
+* Optionally, configure manual or automatic deploys based on your preferences.
 
-### Run the run.py script:
+### Run the application on Heroku:
 
-python run.py
+* After setting up GitHub integration, you can deploy your app manually by selecting the desired branch and clicking "Deploy Branch."
+* For automatic deploys, any pushes to the specified GitHub branch will trigger Heroku to build and deploy the changes.
+
+### Additional Notes:
+
+* View build output and historical build information in the application’s Activity tab on the Heroku Dashboard.
+* Ensure that the GitHub repository is accessible and the GitHub integration has the necessary permissions for smooth deployment.
+* For troubleshooting or additional information, refer to the Heroku GitHub Integration FAQ.
 
 ## Contributors
 
@@ -101,8 +119,9 @@ Dinis Machado
 
 ## Credits
 
-    Google Sheets
-    Code institute walk through
+[Google Sheets](https://www.google.com/sheets/about/)
+
+[Code institute Heroku deployment walk-through](https://codeinstitute.net/se/)
 
 ## Acknowledgments
 
