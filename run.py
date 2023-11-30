@@ -183,39 +183,39 @@ def get_shopping_list():
 def register_shopped_groceries():
     amount_shopped = []
     flour = input("flour (g): ")
-    # milk = input("milk (ml): ")
-    # sugar = input("sugar (g): ")
-    # salt = input("salt (g): ")
-    # butter = input("butter (g): ")
-    # yeast = input("yeast (g): ")
-    # chocolate_chips = input("chocolate chips (g): ")
-    # puff_pastry = input("puff pastry (sheets): ")
-    # egg = input("egg (units): ")
-    # cornstarch = input("cornstarch (g): ")
-    # vanilla_extract = input("vanilla extract (ml): ")
-    # cinnamon = input("cinnamon (g): ")
-    # rice_flour = input("rice flour (g): ")
-    # eggs = input("eggs (units): ")
-    # lemon = input("lemon (units): ")
-    # cocoa = input("cocoa (g): ")
+    milk = input("milk (ml): ")
+    sugar = input("sugar (g): ")
+    salt = input("salt (g): ")
+    butter = input("butter (g): ")
+    yeast = input("yeast (g): ")
+    chocolate_chips = input("chocolate chips (g): ")
+    puff_pastry = input("puff pastry (sheets): ")
+    egg = input("egg (units): ")
+    cornstarch = input("cornstarch (g): ")
+    vanilla_extract = input("vanilla extract (ml): ")
+    cinnamon = input("cinnamon (g): ")
+    rice_flour = input("rice flour (g): ")
+    eggs = input("eggs (units): ")
+    lemon = input("lemon (units): ")
+    cocoa = input("cocoa (g): ")
 
     amount_shopped.extend([
         ["flour", "g", float(flour)],
-        # ["milk", "ml", float(milk)],
-        # ["sugar", "g", float(sugar)],
-        # ["salt", "g", float(salt)],
-        # ["butter", "g", float(butter)],
-        # ["yeast", "g", float(yeast)],
-        # ["chocolate chips", "g", float(chocolate_chips)],
-        # ["puff pastry", "sheets", float(puff_pastry)],
-        # ["egg", "units", float(egg)],
-        # ["cornstarch", "g", float(cornstarch)],
-        # ["vanilla extract", "ml", float(vanilla_extract)],
-        # ["cinnamon", "g", float(cinnamon)],
-        # ["rice flour", "g", float(rice_flour)],
-        # ["eggs", "units", float(eggs)],
-        # ["lemon", "units", float(lemon)],
-        # ["cocoa", "g", float(cocoa)],
+        ["milk", "ml", float(milk)],
+        ["sugar", "g", float(sugar)],
+        ["salt", "g", float(salt)],
+        ["butter", "g", float(butter)],
+        ["yeast", "g", float(yeast)],
+        ["chocolate chips", "g", float(chocolate_chips)],
+        ["puff pastry", "sheets", float(puff_pastry)],
+        ["egg", "units", float(egg)],
+        ["cornstarch", "g", float(cornstarch)],
+        ["vanilla extract", "ml", float(vanilla_extract)],
+        ["cinnamon", "g", float(cinnamon)],
+        ["rice flour", "g", float(rice_flour)],
+        ["eggs", "units", float(eggs)],
+        ["lemon", "units", float(lemon)],
+        ["cocoa", "g", float(cocoa)],
     ])
 
     pantry = get_recipe('pantry')
@@ -240,6 +240,37 @@ def register_shopped_groceries():
         pantry_worksheet.append_row([ingredient, unit, amount])
 
 
+def register_cooked_recipe():
+    # Get the recipe details
+    recipe = get_recipe(show_menu_get_recipe())
+    ingredients_to_subtract = recipe[0][0][1:]
+
+    updated_pantry = []
+
+    # Get the pantry content
+    pantry = get_recipe('pantry')
+    pantry_content = pantry[0][0][1:]
+
+    for pantry_row, spent_row in zip(pantry_content, ingredients_to_subtract):
+        pantry_ingredient, pantry_amount, pantry_unit = pantry_row
+        ingredient, amount, unit = spent_row
+    
+        # Find the corresponding pantry value for the ingredient
+        pantry_value = next(
+            (item[2] for item in pantry_content if item[0] == ingredient), 0
+        )
+        # Subtract the expended amount from the pantry
+        updated_amount = float(pantry_amount) - float(amount)
+        updated_pantry.append([ingredient, unit, updated_amount])
+
+    # Update the "pantry" worksheet with the new values
+    pantry_worksheet = SHEET.worksheet('pantry')
+    pantry_worksheet.clear()
+    pantry_worksheet.append_row(['Ingredient', 'Unit', 'Amount'])
+    for ingredient, unit, amount in updated_pantry:
+        pantry_worksheet.append_row([ingredient, unit, amount])
+
+
 
 def main():
     title = 'What would you like to do?'
@@ -249,6 +280,7 @@ def main():
         'Register Shopped Groceries', 
         'Update Recipe Doses', 
         'Get Recipe', 
+        'register cooked recipe expended goods',
         'Exit'
     ]
     terminal_menu = TerminalMenu(options)
@@ -269,12 +301,17 @@ def main():
             elif user_choice == 3:
                 clear_terminal()
                 update_recipe_doses()
+                update_pantry_goals()
                 main()
             elif user_choice == 4:
                 clear_terminal()
                 print_ingridients()
                 main()
             elif user_choice == 5:
+                clear_terminal()
+                register_cooked_recipe()
+                main()
+            elif user_choice == 6:
                 clear_terminal()
                 main()
                 break
