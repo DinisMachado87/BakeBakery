@@ -15,19 +15,13 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('BakeryBake')
 
 
-
 def clear_terminal():
-    '''
-    Clears the terminal screen
-    '''
+    '''Clears the terminal screen'''
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-
 def print_ingridients():
-    '''
-    Prints the ingredients of the recipe chosen
-    '''
+    '''Prints the ingredients of the recipe chosen'''
     recipes = get_recipe(show_menu_get_recipe())
     clear_terminal()
     for recipe in recipes:
@@ -37,6 +31,7 @@ def print_ingridients():
             print(f'{ingredient[0]}: {ingredient[1]} {ingredient[2]}')
         print('\n')
     main_menu()
+    
 
 def get_recipe(*baked_goods_pages):
     '''
@@ -82,6 +77,46 @@ def show_menu_get_recipe():
         return recipe
     elif menu_entry_index == 4:
         main_menu()
+
+
+def verify_input(user_input):
+    """
+    Verify if the input is a non-negative 
+    integer or float and not an empty string.
+    """
+    try:
+        # Check if the input is a numeric value
+        input_numeric = float(user_input)
+        
+        # Check if the input is non-negative
+        if input_numeric < 0:
+            raise ValueError("Please enter a non-negative number.")
+
+        # Check if the input is an integer or float
+        if input_numeric.is_integer():
+            return int(input_numeric)
+        else:
+            return input_numeric
+    except ValueError:
+        return None
+
+
+def get_valid_input(prompt):
+    """Get user input and verify its correctness."""
+    while True:
+        user_input = input(prompt).strip()
+
+        # Check if the input length is greater than 0 after stripping whitespaces
+        if len(user_input) > 0:
+            verified_input = verify_input(user_input)
+
+            # Check if the input is valid
+            if verified_input is not None:
+                return verified_input
+            else:
+                print("Invalid input. Please enter a non-negative number.")
+        else:
+            print("Input cannot be empty. Please try again.")
 
 def update_pantry_goals():
     '''
@@ -150,6 +185,8 @@ def update_recipe_doses():
         for column in updated_recipe:
             print(f'{column[0]}: {column[1]} {column[2]}')
 
+        print('\r Hold on! We are saving the changes to the spreadsheet...\r')
+
         # Update the "recipe_goals" worksheet with the new values
         worksheet_to_update = SHEET.worksheet(recipe_name)
         worksheet_to_update.clear()
@@ -193,7 +230,7 @@ def get_shopping_list():
                 )
 
     # Print the shopping list
-    print('\nShopping List:')
+    print('\n Your shopping List is:')
     for ingredient, (amount, unit) in shopping_list.items():
         print(f'{ingredient}: {amount} {unit}')
 
@@ -208,41 +245,46 @@ def register_shopped_groceries():
 
     # Create a list with the shopped groceries through user input
     amount_shopped = []
-    flour = input("flour (g): ")
-    milk = input("milk (ml): ")
-    sugar = input("sugar (g): ")
-    salt = input("salt (g): ")
-    butter = input("butter (g): ")
-    yeast = input("yeast (g): ")
-    chocolate_chips = input("chocolate chips (g): ")
-    puff_pastry = input("puff pastry (sheets): ")
-    egg = input("egg (units): ")
-    cornstarch = input("cornstarch (g): ")
-    vanilla_extract = input("vanilla extract (ml): ")
-    cinnamon = input("cinnamon (g): ")
-    rice_flour = input("rice flour (g): ")
-    eggs = input("eggs (units): ")
-    lemon = input("lemon (units): ")
-    cocoa = input("cocoa (g): ")
+
+    print('Enter the amount of each ingredient shopped:\n')
+
+    flour = get_valid_input("flour (g): ")
+    milk = get_valid_input("milk (ml): ")
+    sugar = get_valid_input("sugar (g): ")
+    salt = get_valid_input("salt (g): ")
+    butter = get_valid_input("butter (g): ")
+    yeast = get_valid_input("yeast (g): ")
+    chocolate_chips = get_valid_input("chocolate chips (g): ")
+    puff_pastry = get_valid_input("puff pastry (sheets): ")
+    egg = get_valid_input("egg (units): ")
+    cornstarch = get_valid_input("cornstarch (g): ")
+    vanilla_extract = get_valid_input("vanilla extract (ml): ")
+    cinnamon = get_valid_input("cinnamon (g): ")
+    rice_flour = get_valid_input("rice flour (g): ")
+    eggs = get_valid_input("eggs (units): ")
+    lemon = get_valid_input("lemon (units): ")
+    cocoa = get_valid_input("cocoa (g): ")
 
     amount_shopped.extend([
-        ["flour", "g", float(flour)],
-        ["milk", "ml", float(milk)],
-        ["sugar", "g", float(sugar)],
-        ["salt", "g", float(salt)],
-        ["butter", "g", float(butter)],
-        ["yeast", "g", float(yeast)],
-        ["chocolate chips", "g", float(chocolate_chips)],
-        ["puff pastry", "sheets", float(puff_pastry)],
-        ["egg", "units", float(egg)],
-        ["cornstarch", "g", float(cornstarch)],
-        ["vanilla extract", "ml", float(vanilla_extract)],
-        ["cinnamon", "g", float(cinnamon)],
-        ["rice flour", "g", float(rice_flour)],
-        ["eggs", "units", float(eggs)],
-        ["lemon", "units", float(lemon)],
-        ["cocoa", "g", float(cocoa)],
+        ["flour", "g", flour],
+        ["milk", "ml", milk],
+        ["sugar", "g", sugar],
+        ["salt", "g", salt],
+        ["butter", "g", butter],
+        ["yeast", "g", yeast],
+        ["chocolate chips", "g", chocolate_chips],
+        ["puff pastry", "sheets", puff_pastry],
+        ["egg", "units", egg],
+        ["cornstarch", "g", cornstarch],
+        ["vanilla extract", "ml", vanilla_extract],
+        ["cinnamon", "g", cinnamon],
+        ["rice flour", "g", rice_flour],
+        ["eggs", "units", eggs],
+        ["lemon", "units", lemon],
+        ["cocoa", "g", cocoa],
     ])
+
+    print('\r Hold on! We are saving the changes to the pantry database...\r')
 
     # Get the pantry content
     pantry = get_recipe('pantry')
@@ -267,10 +309,12 @@ def register_shopped_groceries():
     for ingredient, unit, amount in updated_pantry:
         pantry_worksheet.append_row([ingredient, unit, amount])
 
+    print('\nYour pantry has been updated!')
 
 def register_cooked_recipe():
     '''
-    Subtracts from the pantry the expended ingredients in a recipe selected
+    Subtracts from the pantry 
+    the expended ingredients in a recipe selected
     '''
 
     # Get the recipe details
@@ -305,9 +349,7 @@ def register_cooked_recipe():
 
 
 def main_menu():
-    '''
-    Main menu function that calls the other functions
-    '''
+    '''Main menu function that calls the other functions'''
     title = 'What would you like to do?'
     print(f'\n{title}\n')
     options = [
