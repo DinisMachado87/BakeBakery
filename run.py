@@ -113,8 +113,41 @@ def update_pantry_goals():
 
 
 def update_recipe_doses():
-    print('''Update the recipe doses by multiplying the ingredients amount 
-    with the number of servings''')
+    '''
+    Update the recipe doses by multiplying the ingredients amount 
+    with the number of servings
+    '''
+    recipes = get_recipe(show_menu_get_recipe())
+    clear_terminal()
+    servings_input = input("Enter the number of servings: ")
+    clear_terminal()
+    for recipe in recipes:
+        ingredients, servings, recipe_name = recipe
+
+        updated_recipe = []
+
+        for ingredient, amount, unit in ingredients:
+            updated_amount = float(servings_input) * float(amount) / float(servings)
+            updated_recipe.append([ingredient, unit, updated_amount])
+
+        print(f'{recipe_name} updated recipe:')
+        for column in updated_recipe:
+            print(f'{column[0]}: {column[1]} {column[2]}')
+
+        # Update the "recipe_goals" worksheet with the new values
+        worksheet_to_update = SHEET.worksheet(recipe_name)
+        worksheet_to_update.clear()
+    
+        for ingredient, unit, updated_amount in updated_recipe:
+            worksheet_to_update.append_row([ingredient, unit, updated_amount])
+
+    try:
+        servings = float(servings_input)
+        print(f"You entered {servings} servings.")
+    except ValueError:
+        print("Invalid input. Please enter a valid number of servings.")
+
+
 
 
 def register_shopped_groceries():
@@ -123,7 +156,7 @@ def register_shopped_groceries():
 
 def main():
     title = 'What would you like to do?'
-    print(f'{title}\n')
+    print(f'\n{title}\n')
     options = [
         'Get Shopping List', 
         'Register Shopped Groceries', 
@@ -141,15 +174,19 @@ def main():
             if user_choice == 1:
                 clear_terminal()
                 get_shopping_list()
+                main()
             elif user_choice == 2:
                 clear_terminal()
                 register_shopped_groceries()
+                main()
             elif user_choice == 3:
                 clear_terminal()
                 update_recipe_doses()
+                main()
             elif user_choice == 4:
                 clear_terminal()
                 print_ingridients()
+                main()
             elif user_choice == 5:
                 clear_terminal()
                 main()
