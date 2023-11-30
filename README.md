@@ -138,9 +138,13 @@ Dinis Machado
 
 ## Credits
 
-[Google Sheets](https://www.google.com/sheets/about/)
+- [Google Sheets](https://www.google.com/sheets/about/)
 
-[Code institute Heroku deployment walk-through](https://codeinstitute.net/se/)
+- [Code institute Google Sheets connection with Python walk-through](https://codeinstitute.net/se/)
+
+- [Code institute Heroku deployment walk-through](https://codeinstitute.net/se/)
+
+- Terminal menu: [Simple Terminal Menu](https://pypi.org/project/simple-term-menu/).
 
 ## Acknowledgments
 
