@@ -74,7 +74,6 @@ def show_menu_get_recipe():
     elif menu_entry_index == 4:
         main()
 
-
 def update_pantry_goals():
     '''
     Actualizes pantry goals adding ingredients from all recipes 
@@ -88,8 +87,8 @@ def update_pantry_goals():
     )
 
     goals = {}
-    for recipe_name, recipe_data in recipes:
-        for ingredient, amount, unit in recipe_data:
+    for ingredients, servings, recipe_name in recipes:
+        for ingredient, amount, unit in ingredients:
             # Check if the ingredient is already in the goals dictionary
             if ingredient in goals:
                 goals[ingredient][0] += float(amount)
@@ -102,7 +101,6 @@ def update_pantry_goals():
             amount * 1.2, unit
         ] for ingredient, (amount, unit) in goals.items()
     }
-    print(goals_with_increase)
 
     # Update the "recipe_goals" worksheet with the new values
     pantry_goals_worksheet = SHEET.worksheet('pantry_goals')
@@ -110,8 +108,9 @@ def update_pantry_goals():
     pantry_goals_worksheet.append_row(['Ingredient', 'Amount', 'Unit'])
     for ingredient, (amount, unit) in goals_with_increase.items():
         pantry_goals_worksheet.append_row([ingredient, amount, unit])
-    
+
     return goals_with_increase
+
 
 def update_recipe_doses():
     print('''Update the recipe doses by multiplying the ingredients amount 
@@ -123,39 +122,38 @@ def register_shopped_groceries():
 
 
 def main():
-    update_pantry_goals()
-    # title = 'What would you like to do?'
-    # print(f'{title}\n')
-    # options = [
-    #     'Get Shopping List', 
-    #     'Register Shopped Groceries', 
-    #     'Update Recipe Doses', 
-    #     'Get Recipe', 
-    #     'Exit'
-    # ]
-    # terminal_menu = TerminalMenu(options)
-    # menu_entry_index = terminal_menu.show()
+    title = 'What would you like to do?'
+    print(f'{title}\n')
+    options = [
+        'Get Shopping List', 
+        'Register Shopped Groceries', 
+        'Update Recipe Doses', 
+        'Get Recipe', 
+        'Exit'
+    ]
+    terminal_menu = TerminalMenu(options)
+    menu_entry_index = terminal_menu.show()
 
-    # while True:
-    #     user_choice = menu_entry_index + 1
+    while True:
+        user_choice = menu_entry_index + 1
 
-    #     if user_choice is not None:
-    #         if user_choice == 1:
-    #             clear_terminal()
-    #             get_shopping_list()
-    #         elif user_choice == 2:
-    #             clear_terminal()
-    #             register_shopped_groceries()
-    #         elif user_choice == 3:
-    #             clear_terminal()
-    #             update_recipe_doses()
-    #         elif user_choice == 4:
-    #             clear_terminal()
-    #             print_ingridients()
-    #         elif user_choice == 5:
-    #             clear_terminal()
-    #             main()
-    #             break
+        if user_choice is not None:
+            if user_choice == 1:
+                clear_terminal()
+                get_shopping_list()
+            elif user_choice == 2:
+                clear_terminal()
+                register_shopped_groceries()
+            elif user_choice == 3:
+                clear_terminal()
+                update_recipe_doses()
+            elif user_choice == 4:
+                clear_terminal()
+                print_ingridients()
+            elif user_choice == 5:
+                clear_terminal()
+                main()
+                break
 
 
 if __name__ == '__main__':
