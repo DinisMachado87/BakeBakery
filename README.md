@@ -39,6 +39,9 @@ Register cooked recipes to subtract expended ingredients from the pantry.
 
 Automatically clears the terminal screen for a cleaner interface, when one is finished with an action.
 
+![Welcome Menu](documentation/opening_message_menu.png)
+
+
 ### User-Friendly Menu
 
 The application provides a user-friendly menu with options to perform various actions.
@@ -112,6 +115,14 @@ pip install gspread google-auth simple-term-menu
 * View build output and historical build information in the application’s Activity tab on the Heroku Dashboard.
 * Ensure that the GitHub repository is accessible and the GitHub integration has the necessary permissions for smooth deployment.
 * For troubleshooting or additional information, refer to the Heroku GitHub Integration FAQ.
+
+<br>
+
+![Code Institute Python verification print screen](documentation/verification.png)
+
+## Verification
+
+I verified all code in the Code Institute CI Python Linter
 
 ## Contributors
 

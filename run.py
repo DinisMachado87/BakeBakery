@@ -324,6 +324,7 @@ def register_cooked_recipe():
 
     # Get the recipe details
     recipe = get_recipe(show_menu_get_recipe())
+    print(f'\n Hold on! We are updating the pantry...\n')
     ingredients_to_subtract = recipe[0][0][1:]
 
     updated_pantry = []
@@ -350,6 +351,8 @@ def register_cooked_recipe():
     pantry_worksheet.append_row(['Ingredient', 'Unit', 'Amount'])
     for ingredient, unit, amount in updated_pantry:
         pantry_worksheet.append_row([ingredient, unit, amount])
+
+    print('\nYour pantry has been updated!')
 
 
 def main_menu():
