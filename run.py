@@ -15,10 +15,19 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('BakeryBake')
 
 
+
 def clear_terminal():
+'''
+Clears the terminal screen
+'''
     os.system('cls' if os.name == 'nt' else 'clear')
 
+
+
 def print_ingridients():
+    '''
+    Prints the ingredients of the recipe chosen
+    '''
     recipes = get_recipe(show_menu_get_recipe())
     clear_terminal()
     for recipe in recipes:
@@ -85,7 +94,7 @@ def update_pantry_goals():
         'recipe_portuguese_rice_flour_cakes',
         'recipe_brownies'
     )
-
+    # Create a dictionary with the ingredients and amounts
     goals = {}
     for ingredients, servings, recipe_name in recipes:
         for ingredient, amount, unit in ingredients:
@@ -123,13 +132,20 @@ def update_recipe_doses():
     clear_terminal()
     for recipe in recipes:
         ingredients, servings, recipe_name = recipe
-
+        
+        # Create a list with the updated ingredients
         updated_recipe = []
 
+        # Multiply the amount of each ingredient by the number of servings
         for ingredient, amount, unit in ingredients:
-            updated_amount = float(servings_input) * float(amount) / float(servings)
+            updated_amount = (
+                float(servings_input) * 
+                float(amount) / 
+                float(servings)
+            )
             updated_recipe.append([ingredient, unit, updated_amount])
 
+        # Print the updated recipe
         print(f'{recipe_name} updated recipe:')
         for column in updated_recipe:
             print(f'{column[0]}: {column[1]} {column[2]}')
@@ -153,17 +169,21 @@ def get_shopping_list():
     Get the shopping list by subtracting pantry amounts 
     from pantry_goals amounts
     '''
+    # Get the pantry and pantry_goals data
     recipes = get_recipe('pantry_goals', 'pantry')
     pantry_goals_data = recipes[0][0][2:]  # Skip the header row
     pantry_data = recipes[1][0][2:]       # Skip the header row
 
+    # Create a dictionary with the pantry_goals and pantry data
     pantry_goals = {
         row[0]: [float(row[1]), row[2]] for row in pantry_goals_data
     }
     pantry = {row[0]: [float(row[1]), row[2]] for row in pantry_data}
     
+    # Create a dictionary with the shopping list
     shopping_list = {}
     
+    # Subtract the pantry amounts from the pantry_goals amounts
     for ingredient_goals, (amount_goals, unit_goals) in pantry_goals.items():
         if ingredient_goals in pantry:
             amount_pantry, unit_pantry = pantry[ingredient_goals]
@@ -172,6 +192,7 @@ def get_shopping_list():
                     amount_goals - amount_pantry, unit_goals
                 )
 
+    # Print the shopping list
     print('\nShopping List:')
     for ingredient, (amount, unit) in shopping_list.items():
         print(f'{ingredient}: {amount} {unit}')
@@ -181,6 +202,11 @@ def get_shopping_list():
 
 
 def register_shopped_groceries():
+    '''
+    create a list with the shopped groceries and update the pantry
+    '''
+
+    # Create a list with the shopped groceries through user input
     amount_shopped = []
     flour = input("flour (g): ")
     milk = input("milk (ml): ")
@@ -218,10 +244,12 @@ def register_shopped_groceries():
         ["cocoa", "g", float(cocoa)],
     ])
 
+    # Get the pantry content
     pantry = get_recipe('pantry')
     pantry_content = pantry[0][0][2:]
     updated_pantry = []
 
+    # Add the amounts from pantry and amount_shopped
     for row in pantry_content:
         ingredient, amount, unit = row
         # Find the corresponding amount_shopped value for the ingredient
@@ -241,6 +269,10 @@ def register_shopped_groceries():
 
 
 def register_cooked_recipe():
+    '''
+    Subtracts from the pantry the expended ingredients in a recipe selected
+    '''
+
     # Get the recipe details
     recipe = get_recipe(show_menu_get_recipe())
     ingredients_to_subtract = recipe[0][0][1:]
@@ -273,6 +305,9 @@ def register_cooked_recipe():
 
 
 def main():
+    '''
+    Main menu function that calls the other functions
+    '''
     title = 'What would you like to do?'
     print(f'\n{title}\n')
     options = [
