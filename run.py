@@ -22,6 +22,7 @@ def clear_terminal():
 
 def print_ingridients():
     '''Prints the ingredients of the recipe chosen'''
+    print('''\n What recipe do you want to see?\n''')
     recipes = get_recipe(show_menu_get_recipe())
     clear_terminal()
     for recipe in recipes:
@@ -31,7 +32,7 @@ def print_ingridients():
             print(f'{ingredient[0]}: {ingredient[1]} {ingredient[2]}')
         print('\n')
     main_menu()
-    
+
 
 def get_recipe(*baked_goods_pages):
     '''
@@ -39,7 +40,6 @@ def get_recipe(*baked_goods_pages):
     and servings into a dictionary
     '''
     recipes = []
-    
     for page in baked_goods_pages:
         worksheet = SHEET.worksheet(page)
         data = worksheet.get_all_values()
@@ -53,7 +53,6 @@ def get_recipe(*baked_goods_pages):
 def show_menu_get_recipe():
     '''Show the menu with the recipes and return the recipe chosen'''
     title = 'Which recipe?'
-    print(title)
     options = [
         'croissants',
         'pastel de nata',
@@ -123,6 +122,7 @@ def update_pantry_goals():
     Actualizes pantry goals adding ingredients from all recipes 
     and adding 20% to each ingredient
     '''
+    print('\n Hold on! We are updating the pantry goals...\n')
     recipes = get_recipe(
         'recipe_croissants',
         'recipe_pastel_de_nata',
@@ -153,6 +153,7 @@ def update_pantry_goals():
     for ingredient, (amount, unit) in goals_with_increase.items():
         pantry_goals_worksheet.append_row([ingredient, unit, amount])
 
+    print('\nYour pantry goals have been updated!')
     return goals_with_increase
 
 
@@ -161,9 +162,13 @@ def update_recipe_doses():
     Update the recipe doses by multiplying the ingredients amount 
     with the number of servings
     '''
+    print('''\n What recipe do you want to update?''')
     recipes = get_recipe(show_menu_get_recipe())
     clear_terminal()
-    servings_input = input("Enter the number of servings: ")
+    servings_input = get_valid_input(
+'''Enter the number of servings you want to resize the recipe for : '''
+    )
+
     clear_terminal()
     for recipe in recipes:
         ingredients, servings, recipe_name = recipe
@@ -181,11 +186,11 @@ def update_recipe_doses():
             updated_recipe.append([ingredient, unit, updated_amount])
 
         # Print the updated recipe
-        print(f'{recipe_name} updated recipe:')
+        print(f'{recipe_name} updated recipe:\n')
         for column in updated_recipe:
             print(f'{column[0]}: {column[1]} {column[2]}')
 
-        print('\r Hold on! We are saving the changes to the spreadsheet...\r')
+        print('\n Hold on! We are saving the changes to the spreadsheet...\n')
 
         # Update the "recipe_goals" worksheet with the new values
         worksheet_to_update = SHEET.worksheet(recipe_name)
@@ -193,12 +198,6 @@ def update_recipe_doses():
     
         for ingredient, unit, updated_amount in updated_recipe:
             worksheet_to_update.append_row([ingredient, unit, updated_amount])
-
-    try:
-        servings = float(servings_input)
-        print(f"You entered {servings} servings.")
-    except ValueError:
-        print("Invalid input. Please enter a valid number of servings.")
 
 
 def get_shopping_list():
@@ -284,7 +283,7 @@ def register_shopped_groceries():
         ["cocoa", "g", cocoa],
     ])
 
-    print('\r Hold on! We are saving the changes to the pantry database...\r')
+    print('\n Hold on! We are saving the changes to the pantry database...\n')
 
     # Get the pantry content
     pantry = get_recipe('pantry')
@@ -403,7 +402,8 @@ def main():
     update pantry goals based on recipes, 
     get shopping lists, register shopped groceries, 
     and more.
-    Just follow the menu!!!
+    Just navigate the menu with the arrows, type, 
+    and click enter for choices!!!
     ''')
     main_menu()
 
