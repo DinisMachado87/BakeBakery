@@ -17,9 +17,9 @@ SHEET = GSPREAD_CLIENT.open('BakeryBake')
 
 
 def clear_terminal():
-'''
-Clears the terminal screen
-'''
+    '''
+    Clears the terminal screen
+    '''
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
@@ -322,31 +322,31 @@ def main():
     menu_entry_index = terminal_menu.show()
 
     while True:
-        user_choice = menu_entry_index + 1
+        user_choice = menu_entry_index
 
         if user_choice is not None:
-            if user_choice == 1:
+            if user_choice == 0:
                 clear_terminal()
                 get_shopping_list()
                 main()
-            elif user_choice == 2:
+            elif user_choice == 1:
                 clear_terminal()
                 register_shopped_groceries()
                 main()
-            elif user_choice == 3:
+            elif user_choice == 2:
                 clear_terminal()
                 update_recipe_doses()
                 update_pantry_goals()
                 main()
-            elif user_choice == 4:
+            elif user_choice == 3:
                 clear_terminal()
                 print_ingridients()
                 main()
-            elif user_choice == 5:
+            elif user_choice == 4:
                 clear_terminal()
                 register_cooked_recipe()
                 main()
-            elif user_choice == 6:
+            elif user_choice == 5:
                 clear_terminal()
                 main()
                 break
